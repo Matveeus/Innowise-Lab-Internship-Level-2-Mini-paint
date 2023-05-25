@@ -1,11 +1,12 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../services/firebase';
+import {auth, facebookAuthProvider, googleAuthProvider} from '../services/firebase';
 import AuthSwitch from '../components/auth/AuthSwitch';
 import { RegisterForm } from '../components/auth/RegisterForm';
-import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
+import {createUserWithEmailAndPassword, updateProfile, signInWithPopup} from "firebase/auth";
 import {setUser} from "../redux/slices/userSlice";
+import ErrorBar from "../components/ErrorBar";
 
 interface State {
     name: string;
@@ -64,11 +65,39 @@ function Register() {
     };
 
     const handleGoogleSignIn = (): void => {
-        //google
+        signInWithPopup(auth, googleAuthProvider)
+            .then(({ user }) => {
+                console.log(name);
+                    dispatch(
+                        setUser({
+                            name: user.displayName,
+                            email: user.email,
+                            token: user.getIdToken(),
+                            id: user.uid,
+                        })
+                    );
+            })
+            .catch((error: Error) => {
+                setError(error.message);
+            })
     };
 
     const handleFacebookSignIn = (): void => {
-        //facebook
+        signInWithPopup(auth, facebookAuthProvider)
+            .then(({ user }) => {
+                console.log(name);
+                dispatch(
+                    setUser({
+                        name: user.displayName,
+                        email: user.email,
+                        token: user.getIdToken(),
+                        id: user.uid,
+                    })
+                );
+            })
+            .catch((error: Error) => {
+                setError(error.message);
+            })
     };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -89,6 +118,7 @@ function Register() {
                 handleSubmit={handleSubmit}
             />
             <AuthSwitch text="Already have an account? Sign in!" href="/login" />
+            <ErrorBar error={error} setError={setError} />
         </>
     );
 }

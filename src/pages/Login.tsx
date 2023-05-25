@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import {setUser} from '../redux/slices/userSlice'
 import { LoginForm } from "../components/auth/LoginForm";
+import ErrorBar from "../components/ErrorBar";
 
 interface State {
     email: string;
@@ -110,6 +111,7 @@ function Login() {
                 handleSubmit={handleSubmit}
             />
             <AuthSwitch text='Don&apos;t have an account? Register!' href='/register' />
+            <ErrorBar error={error} setError={setError} />
         </>
     );
 }
