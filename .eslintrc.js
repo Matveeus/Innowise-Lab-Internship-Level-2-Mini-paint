@@ -19,6 +19,7 @@ module.exports = {
             "files": ['src/**/*.js', 'src/**/*.jsx', 'src/**/*.ts', 'src/**/*.tsx'],
         }
     ],
+    "ignorePatterns": ["**/*.css", "**/*.scss"],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",
