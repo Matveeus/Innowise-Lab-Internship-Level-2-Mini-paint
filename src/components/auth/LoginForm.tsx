@@ -17,10 +17,9 @@ export default function LoginForm() {
     const [error, setError] = useState<string | null>(null);
     const dispatch = useDispatch();
 
-
     const handleSubmit = (): void => {
         if (!email || !password) {
-            setError('Password and password confirmation do not match');
+            setError('Please, enter email and password');
             return;
         }
         signInWithEmailAndPassword(auth, email, password)
