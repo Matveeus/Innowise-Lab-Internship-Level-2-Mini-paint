@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
 import AuthForm from "./AuthForm";
-import {useDispatch} from "react-redux";
 import {auth} from "../../services/firebase";
 import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
-import {setUser} from "../../redux/slices/userSlice";
 
 export default function RegisterForm() {
     const [userCredentials, setUserCredentials] = useState({
@@ -12,42 +10,21 @@ export default function RegisterForm() {
         password: '',
         passwordConfirm: '',
     });
-    const {name, email, password, passwordConfirm} = userCredentials;
+    const {name, email, password} = userCredentials;
 
     const [error, setError] = useState<string | null>(null);
-    const dispatch = useDispatch();
 
-    const handleSubmit = (): void => {
-        if (password !== passwordConfirm) {
-            setError("Password and password confirmation do not match");
-            return;
-        }
-
+    const handleSubmit = () => {
         createUserWithEmailAndPassword(auth, email, password)
-            .then(({user}) => {
-                console.log(name);
-                updateProfile(user, {displayName: name}).then(() =>
-                    dispatch(
-                        setUser({
-                            name: user.displayName,
-                            email: user.email,
-                            token: user.getIdToken(),
-                            id: user.uid,
-                        })
-                    ));
+            .then(({ user }) => {
+                updateProfile(user, { displayName: name })
+                    .catch((error) => {
+                        setError(error.message);
+                    });
             })
-            .catch((error: Error) => {
+            .catch((error) => {
                 setError(error.message);
             })
-            .finally(() => {
-                setUserCredentials((prevState) => ({
-                    ...prevState,
-                    name: "",
-                    email: "",
-                    password: "",
-                    passwordConfirm: ""
-                }));
-            });
     };
 
     return (

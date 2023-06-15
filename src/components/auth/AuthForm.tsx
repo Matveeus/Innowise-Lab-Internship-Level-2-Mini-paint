@@ -3,9 +3,7 @@ import {Box, Button, Container, TextField, Typography} from "@mui/material";
 import Logo from '../Logo'
 import {signInWithPopup} from "firebase/auth";
 import {GoogleAuthProvider, FacebookAuthProvider, Auth} from "firebase/auth";
-import {setUser} from "../../redux/slices/userSlice";
 import ErrorBar from "../ErrorBar";
-import {useDispatch} from "react-redux";
 import useAuthState from "../../hooks/useAuthState";
 import SocialLoginButtons from "./SocialLoginButtons";
 
@@ -30,23 +28,11 @@ export default function AuthForm({
                                  }: AuthFormProps) {
 
     const {name, email, password, passwordConfirm} = userCredentials;
-    const dispatch = useDispatch();
 
     useAuthState();
 
     const handleSocialSignIn = (auth: Auth, authProvider: GoogleAuthProvider | FacebookAuthProvider): void => {
-        signInWithPopup(auth, authProvider)
-            .then(({user}) => {
-                dispatch(
-                    setUser({
-                        name: user.displayName,
-                        email: user.email,
-                        token: user.getIdToken(),
-                        id: user.uid,
-                    })
-                );
-            })
-            .catch((error: Error) => {
+        signInWithPopup(auth, authProvider).catch((error: Error) => {
                 setError(error.message);
             });
     };

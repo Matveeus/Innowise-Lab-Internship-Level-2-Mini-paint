@@ -1,14 +1,11 @@
 import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {useDispatch} from "react-redux";
 import {auth} from "../../services/firebase";
 import {signOut} from "firebase/auth";
-import {removeUser} from "../../redux/slices/userSlice";
 import {Button} from "@mui/material";
 import LogoutIcon from '@mui/icons-material/Logout';
 
 function LogOutButton() {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -21,10 +18,12 @@ function LogOutButton() {
     }, [navigate]);
 
     const handleSignOut = (): void => {
-        signOut(auth).then(() => dispatch(removeUser()));
+        signOut(auth).then();
     };
     return (
-        <Button sx={{ border: '1px solid #FFFFFF', color: '#FFFFFF', height: '100%'}} onClick={handleSignOut}>
+        <Button sx={{ border: '1px solid #FFFFFF', color: '#FFFFFF','&:hover': {
+                background: 'rgba(255, 255, 255, 0.5);',
+            }, height: '100%'}} onClick={handleSignOut}>
             <LogoutIcon/>
         </Button>
     );
