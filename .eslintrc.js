@@ -12,7 +12,9 @@ module.exports = {
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "prettier",
+        "plugin:prettier/recommended",
     ],
     "overrides": [
         {
@@ -27,9 +29,11 @@ module.exports = {
     },
     "plugins": [
         "react",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "prettier",
     ],
     "ignorePatterns": ["**/*.css", "**/*.scss"],
     "rules": {
+        'prettier/prettier': 'error',
     }
 }
