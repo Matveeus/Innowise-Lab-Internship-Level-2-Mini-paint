@@ -4,6 +4,8 @@ import { auth } from '../../services/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 export default function RegisterForm() {
+  const [error, setError] = useState<string | null>(null);
+
   const [userCredentials, setUserCredentials] = useState({
     name: '',
     email: '',
@@ -11,8 +13,6 @@ export default function RegisterForm() {
     passwordConfirm: '',
   });
   const { name, email, password } = userCredentials;
-
-  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = () => {
     createUserWithEmailAndPassword(auth, email, password)
@@ -28,7 +28,7 @@ export default function RegisterForm() {
 
   return (
     <AuthForm
-      handleSubmit={handleSubmit}
+      handleFormSubmit={handleSubmit}
       error={error}
       setError={setError}
       userCredentials={userCredentials}
