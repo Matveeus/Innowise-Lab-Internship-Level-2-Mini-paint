@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import AuthForm from './AuthForm';
 import { auth } from '../../services/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import Loader from '../Loader';
 
 export default function RegisterForm() {
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [userCredentials, setUserCredentials] = useState({
     name: '',
@@ -14,17 +16,21 @@ export default function RegisterForm() {
   });
   const { name, email, password } = userCredentials;
 
-  const handleSubmit = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(({ user }) => {
-        updateProfile(user, { displayName: name }).catch(error => {
-          setError(error.message);
-        });
-      })
-      .catch(error => {
-        setError(error.message);
-      });
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(user, { displayName: name });
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  if (isLoading === true) {
+    return <Loader />;
+  }
 
   return (
     <AuthForm

@@ -47,10 +47,15 @@ export default function AuthForm({
 
   useAuthState();
 
-  const handleSocialSignIn = (auth: Auth, authProvider: GoogleAuthProvider | FacebookAuthProvider): void => {
-    signInWithPopup(auth, authProvider).catch((error: Error) => {
-      setError(error.message);
-    });
+  const handleSocialSignIn = async (
+    auth: Auth,
+    authProvider: GoogleAuthProvider | FacebookAuthProvider,
+  ): Promise<void> => {
+    try {
+      await signInWithPopup(auth, authProvider);
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
