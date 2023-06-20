@@ -8,6 +8,7 @@ const lightTheme = createTheme({
     secondary: {
       main: '#7b1fa2',
     },
+    active: '#B2CCEB',
   },
 });
 
@@ -20,6 +21,7 @@ const darkTheme = createTheme({
     secondary: {
       main: '#3f51b5',
     },
+    active: '#67420C',
   },
 });
 

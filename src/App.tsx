@@ -6,6 +6,7 @@ import './assets/styles/App.css';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
+import Paint from './pages/Paint';
 import SwitchTheme from './components/SwitchTheme';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/paint" element={<Paint />} />
       </Routes>
       <SwitchTheme toggleTheme={toggleTheme} />
     </ThemeProvider>
