@@ -1,22 +1,15 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Shape, addShape } from '../../redux/store/canvasSlice';
+import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store/store';
+import { Shape, addShape, setIsDrawing, setStartX, setStartY, setTempShape } from '../../redux/store/canvasSlice';
 import useDrawShape from '../../hooks/useDrawShape';
 
 const Canvas: React.FC = () => {
-  const color = useSelector((state: RootState) => state.canvas.color);
-  const thickness = useSelector((state: RootState) => state.canvas.thickness);
-  const currentTool = useSelector((state: RootState) => state.canvas.currentTool);
-  const shapes = useSelector((state: RootState) => state.canvas.shapes);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [startY, setStartY] = useState(0);
-  const [tempShape, setTempShape] = useState<Shape | null>(null);
-  const [isNewShapeAdded, setIsNewShapeAdded] = useState(false); // Добавлено состояние для отслеживания новой фигуры
-  const newShapeRef = useRef<Shape | null>(null); // Добавлен ref для хранения новой фигуры
+  const { color, thickness, currentTool, shapes, isDrawing, startX, startY, tempShape } = useSelector(
+    (state: RootState) => state.canvas,
+  );
 
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const dispatch = useDispatch();
   const drawShape = useDrawShape();
 
@@ -24,13 +17,14 @@ const Canvas: React.FC = () => {
     (event: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
+
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
 
-      setStartX(x);
-      setStartY(y);
-      setIsDrawing(true);
+      dispatch(setStartX(x));
+      dispatch(setStartY(y));
+      dispatch(setIsDrawing(true));
 
       if (currentTool !== 'brush') {
         const shape: Shape = {
@@ -43,16 +37,16 @@ const Canvas: React.FC = () => {
           thickness,
         };
 
-        setTempShape(shape);
+        dispatch(setTempShape(shape));
       }
     },
-    [color, currentTool, thickness],
+    [color, currentTool, dispatch, thickness],
   );
 
   const handleMouseMove = useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
       if (!isDrawing) return;
-      console.log('render move');
+
       const canvas = canvasRef.current;
       if (!canvas) return;
 
@@ -71,10 +65,9 @@ const Canvas: React.FC = () => {
           thickness,
         };
 
-        dispatch(addShape([shape]));
-
-        setStartX(x);
-        setStartY(y);
+        dispatch(addShape(shape));
+        dispatch(setStartX(x));
+        dispatch(setStartY(y));
       } else if (tempShape) {
         const shape: Shape = {
           ...tempShape,
@@ -82,7 +75,7 @@ const Canvas: React.FC = () => {
           endY: y,
         };
 
-        setTempShape(shape);
+        dispatch(setTempShape(shape));
       }
     },
     [color, currentTool, dispatch, isDrawing, startX, startY, tempShape, thickness],
@@ -90,7 +83,8 @@ const Canvas: React.FC = () => {
 
   const handleMouseUp = useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
-      setIsDrawing(false);
+      dispatch(setIsDrawing(false));
+
       if (currentTool === 'brush') {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -109,18 +103,13 @@ const Canvas: React.FC = () => {
           thickness,
         };
 
-        dispatch(addShape([shape]));
+        dispatch(addShape(shape));
       } else if (tempShape) {
-        const updatedShapes = [...shapes, tempShape];
-
-        dispatch(addShape(updatedShapes));
-
-        setTempShape(null);
-        newShapeRef.current = tempShape;
-        setIsNewShapeAdded(true);
+        dispatch(addShape(tempShape));
+        dispatch(setTempShape(null));
       }
     },
-    [color, currentTool, dispatch, shapes, startX, startY, tempShape, thickness],
+    [color, currentTool, dispatch, startX, startY, tempShape, thickness],
   );
 
   useEffect(() => {
@@ -128,25 +117,17 @@ const Canvas: React.FC = () => {
     if (!canvas) return;
 
     const context = canvas.getContext('2d');
-
     if (!context) return;
 
-    if (isNewShapeAdded) {
-      if (newShapeRef.current) {
-        drawShape(context, newShapeRef.current);
-        setIsNewShapeAdded(false);
-      }
-    } else {
-      context.fillStyle = '#FFFFFF';
-      context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = '#FFFFFF';
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
-      shapes.forEach(shape => drawShape(context, shape));
+    shapes.forEach(shape => drawShape(context, shape));
 
-      if (tempShape) {
-        drawShape(context, tempShape);
-      }
+    if (tempShape) {
+      drawShape(context, tempShape);
     }
-  }, [shapes, tempShape, isNewShapeAdded, drawShape]);
+  }, [shapes, tempShape, drawShape]);
 
   return (
     <canvas

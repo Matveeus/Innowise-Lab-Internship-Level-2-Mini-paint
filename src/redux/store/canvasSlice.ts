@@ -5,6 +5,10 @@ interface CanvasState {
   thickness: number;
   currentTool: string;
   shapes: Shape[];
+  isDrawing: boolean;
+  startX: number;
+  startY: number;
+  tempShape: Shape | null;
 }
 
 export interface Shape {
@@ -22,6 +26,10 @@ const initialState: CanvasState = {
   thickness: 1,
   currentTool: 'brush',
   shapes: [],
+  isDrawing: false,
+  startX: 0,
+  startY: 0,
+  tempShape: null,
 };
 
 const canvasSlice = createSlice({
@@ -37,15 +45,40 @@ const canvasSlice = createSlice({
     setCurrentTool: (state, action: PayloadAction<string>) => {
       state.currentTool = action.payload;
     },
-    addShape: (state, action: PayloadAction<Shape[]>) => {
-      state.shapes = [...state.shapes, ...action.payload];
+    addShape: (state, action: PayloadAction<Shape>) => {
+      state.shapes.push(action.payload);
     },
     clearShapes: state => {
       state.shapes = [];
     },
+    setIsDrawing: (state, action: PayloadAction<boolean>) => {
+      state.isDrawing = action.payload;
+    },
+
+    setStartX: (state, action: PayloadAction<number>) => {
+      state.startX = action.payload;
+    },
+
+    setStartY: (state, action: PayloadAction<number>) => {
+      state.startY = action.payload;
+    },
+
+    setTempShape: (state, action: PayloadAction<Shape | null>) => {
+      state.tempShape = action.payload;
+    },
   },
 });
 
-export const { setThickness, setColor, setCurrentTool, clearShapes, addShape } = canvasSlice.actions;
+export const {
+  setThickness,
+  setColor,
+  setCurrentTool,
+  clearShapes,
+  addShape,
+  setTempShape,
+  setIsDrawing,
+  setStartY,
+  setStartX,
+} = canvasSlice.actions;
 
 export default canvasSlice.reducer;
