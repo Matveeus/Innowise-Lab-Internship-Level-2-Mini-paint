@@ -17,7 +17,7 @@ const Sidebar: React.FC = () => {
   const color = useSelector((state: RootState) => state.canvas.color);
   const currentTool = useSelector((state: RootState) => state.canvas.currentTool);
   const dispatch = useDispatch();
-  const [activeButton, setActiveButton] = useState('');
+  const [activeButton, setActiveButton] = useState('brush');
 
   const handleThicknessChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newThickness = parseInt(event.target.value, 10);

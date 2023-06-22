@@ -25,6 +25,7 @@ export default function Header() {
         padding: '10px 30px',
         top: 0,
         width: '100%',
+        zIndex: 5,
       }}
     >
       <Logo

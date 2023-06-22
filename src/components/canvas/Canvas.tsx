@@ -4,12 +4,15 @@ import { RootState } from '../../redux/store/store';
 import { Shape, addShape, setIsDrawing, setStartX, setStartY, setTempShape } from '../../redux/store/canvasSlice';
 import useDrawShape from '../../hooks/useDrawShape';
 
-const Canvas: React.FC = () => {
+interface CanvasProps {
+  canvasRef: React.RefObject<HTMLCanvasElement>;
+}
+
+const Canvas: React.FC<CanvasProps> = ({ canvasRef }) => {
   const { color, thickness, currentTool, shapes, isDrawing, startX, startY, tempShape } = useSelector(
     (state: RootState) => state.canvas,
   );
 
-  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const dispatch = useDispatch();
   const drawShape = useDrawShape();
 
