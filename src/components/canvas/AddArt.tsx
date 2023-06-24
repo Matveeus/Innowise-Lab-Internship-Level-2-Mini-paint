@@ -1,15 +1,21 @@
 import React from 'react';
-import { Box, TextField, Button } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { db, auth } from '../../services/firebase';
-import { set, ref } from 'firebase/database';
+import { auth, db } from '../../services/firebase';
+import { ref, set } from 'firebase/database';
 import { clearShapes } from '../../redux/store/canvasSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store/store';
+import { useNavigate } from 'react-router-dom';
+import { uid } from 'uid';
 
 interface SaveCanvasProps {
   canvasRef: React.RefObject<HTMLCanvasElement>;
+  setSaveStatus: React.Dispatch<React.SetStateAction<boolean | null>>;
 }
-const SaveCanvas: React.FC<SaveCanvasProps> = ({ canvasRef }) => {
+
+const AddArt: React.FC<SaveCanvasProps> = ({ canvasRef, setSaveStatus }) => {
+  const { shapes } = useSelector((state: RootState) => state.canvas);
   const [title, setTitle] = React.useState('');
   const {
     register,
@@ -23,30 +29,42 @@ const SaveCanvas: React.FC<SaveCanvasProps> = ({ canvasRef }) => {
     setTitle(event.target.value);
   };
 
-  const handleCanvasSave: SubmitHandler<FieldValues> = data => {
+  const navigate = useNavigate();
+
+  const handleCanvasSave: SubmitHandler<FieldValues> = async () => {
+    setSaveStatus(true);
     const canvasURL = canvasRef.current?.toDataURL();
     const currentDate = new Date();
     const username = auth.currentUser?.displayName;
+    const canvasID = uid();
 
     const canvasData = {
       title,
       createdOn: currentDate,
       username,
       canvasURL,
+      shapes,
+      canvasID,
     };
-    set(ref(db, `${data.title}`), {
-      canvas: canvasData,
-    });
 
-    dispatch(clearShapes());
-    setTitle('');
+    try {
+      await set(ref(db, `${canvasData.canvasID}`), {
+        canvas: canvasData,
+      });
+
+      dispatch(clearShapes());
+      setTitle('');
+      navigate('/');
+    } catch (error) {
+      console.error('Error saving canvas:', error);
+    }
   };
 
   return (
     <Box>
       <form
         onSubmit={handleSubmit(handleCanvasSave)}
-        style={{ margin: '30px 0', display: 'flex', justifyContent: 'center' }}
+        style={{ margin: '20px 0 0 0', display: 'flex', justifyContent: 'center' }}
       >
         <TextField
           {...register('title', {
@@ -75,4 +93,4 @@ const SaveCanvas: React.FC<SaveCanvasProps> = ({ canvasRef }) => {
   );
 };
 
-export default SaveCanvas;
+export default AddArt;

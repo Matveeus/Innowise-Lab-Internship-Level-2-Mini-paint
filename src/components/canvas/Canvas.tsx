@@ -1,7 +1,7 @@
-import React, { useEffect, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store/store';
-import { Shape, addShape, setIsDrawing, setStartX, setStartY, setTempShape } from '../../redux/store/canvasSlice';
+import { addShapes, setIsDrawing, setStartX, setStartY, setTempShape, Shape } from '../../redux/store/canvasSlice';
 import useDrawShape from '../../hooks/useDrawShape';
 
 interface CanvasProps {
@@ -16,15 +16,15 @@ const Canvas: React.FC<CanvasProps> = ({ canvasRef }) => {
   const dispatch = useDispatch();
   const drawShape = useDrawShape();
 
-  const handleMouseDown = useCallback(
-    (event: React.MouseEvent<HTMLCanvasElement>) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
+  const handleMouse = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-      const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
+    if (event.type === 'mousedown') {
       dispatch(setStartX(x));
       dispatch(setStartY(y));
       dispatch(setIsDrawing(true));
@@ -42,20 +42,8 @@ const Canvas: React.FC<CanvasProps> = ({ canvasRef }) => {
 
         dispatch(setTempShape(shape));
       }
-    },
-    [color, currentTool, dispatch, thickness],
-  );
-
-  const handleMouseMove = useCallback(
-    (event: React.MouseEvent<HTMLCanvasElement>) => {
+    } else if (event.type === 'mousemove') {
       if (!isDrawing) return;
-
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-
-      const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
 
       if (currentTool === 'brush') {
         const shape: Shape = {
@@ -68,7 +56,7 @@ const Canvas: React.FC<CanvasProps> = ({ canvasRef }) => {
           thickness,
         };
 
-        dispatch(addShape(shape));
+        dispatch(addShapes([shape]));
         dispatch(setStartX(x));
         dispatch(setStartY(y));
       } else if (tempShape) {
@@ -80,22 +68,10 @@ const Canvas: React.FC<CanvasProps> = ({ canvasRef }) => {
 
         dispatch(setTempShape(shape));
       }
-    },
-    [color, currentTool, dispatch, isDrawing, startX, startY, tempShape, thickness],
-  );
-
-  const handleMouseUp = useCallback(
-    (event: React.MouseEvent<HTMLCanvasElement>) => {
+    } else if (event.type === 'mouseup') {
       dispatch(setIsDrawing(false));
 
       if (currentTool === 'brush') {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
         const shape: Shape = {
           type: 'brush',
           startX,
@@ -106,14 +82,13 @@ const Canvas: React.FC<CanvasProps> = ({ canvasRef }) => {
           thickness,
         };
 
-        dispatch(addShape(shape));
+        dispatch(addShapes([shape]));
       } else if (tempShape) {
-        dispatch(addShape(tempShape));
+        dispatch(addShapes([tempShape]));
         dispatch(setTempShape(null));
       }
-    },
-    [color, currentTool, dispatch, startX, startY, tempShape, thickness],
-  );
+    }
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -136,12 +111,12 @@ const Canvas: React.FC<CanvasProps> = ({ canvasRef }) => {
     <canvas
       ref={canvasRef}
       className="canvas"
-      style={{ display: 'flex', margin: '30px auto', border: '3px solid #b6b6b6' }}
-      width={900}
-      height={600}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
+      style={{ display: 'flex', margin: '30px auto', border: '3px dashed #b6b6b6' }}
+      width={window.innerWidth * 0.7}
+      height={window.innerHeight * 0.7}
+      onMouseDown={handleMouse}
+      onMouseMove={handleMouse}
+      onMouseUp={handleMouse}
     />
   );
 };

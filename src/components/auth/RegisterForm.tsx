@@ -28,7 +28,7 @@ export default function RegisterForm() {
     }
   };
 
-  if (isLoading === true) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -39,7 +39,7 @@ export default function RegisterForm() {
       setError={setError}
       userCredentials={userCredentials}
       setUserCredentials={setUserCredentials}
-      buttonTitle="register"
+      buttonTitle="Registration"
       title="Registration"
     />
   );

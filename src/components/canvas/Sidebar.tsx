@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store/store';
-import { setThickness, setColor, setCurrentTool, clearShapes } from '../../redux/store/canvasSlice';
+import { clearShapes, setColor, setCurrentTool, setThickness, undo } from '../../redux/store/canvasSlice';
 import { Box, Button, ButtonGroup } from '@mui/material';
 import {
   BrushOutlined,
-  CropSquareOutlined,
   CircleOutlined,
+  CleaningServicesOutlined,
+  CropSquareOutlined,
   EastOutlined,
   StarBorderOutlined,
-  CleaningServicesOutlined,
+  Undo,
 } from '@mui/icons-material';
 
 const Sidebar: React.FC = () => {
@@ -38,9 +39,13 @@ const Sidebar: React.FC = () => {
     dispatch(clearShapes());
   };
 
+  const handleUndo = () => {
+    dispatch(undo());
+  };
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', height: '50px' }}>
-      <ButtonGroup variant="outlined" aria-label="outlined button group" sx={{ width: '40%', height: '100%' }}>
+      <ButtonGroup variant="outlined" aria-label="outlined button group" sx={{ width: '30%', height: '100%' }}>
         <Button
           onClick={() => handleToolChange('brush')}
           className={currentTool === 'brush' ? 'active' : ''}
@@ -87,7 +92,22 @@ const Sidebar: React.FC = () => {
         >
           <StarBorderOutlined />
         </Button>
-        <Button variant="outlined" color="error" onClick={handleClearCanvas}>
+        <Button
+          color="success"
+          onClick={handleUndo}
+          sx={{
+            width: '100%',
+          }}
+        >
+          <Undo />
+        </Button>
+        <Button
+          color="error"
+          onClick={handleClearCanvas}
+          sx={{
+            width: '100%',
+          }}
+        >
           <CleaningServicesOutlined />
         </Button>
       </ButtonGroup>

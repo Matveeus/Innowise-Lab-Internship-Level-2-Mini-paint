@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 function AddArtwork() {
   return (
-    <Link to="/paint">
+    <Link to="/create-art">
       <Button
         sx={{
           border: '1px solid #FFFFFF',

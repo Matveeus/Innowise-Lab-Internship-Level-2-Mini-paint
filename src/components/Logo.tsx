@@ -1,5 +1,8 @@
-import React, { FC, CSSProperties } from 'react';
-import { Link } from 'react-router-dom';
+import React, { CSSProperties, FC } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Link } from '@mui/material';
+import { clearShapes } from '../redux/store/canvasSlice';
+import { useDispatch } from 'react-redux';
 import logo from '../assets/images/paint-logo.svg';
 
 interface LogoProps {
@@ -7,9 +10,17 @@ interface LogoProps {
 }
 
 const Logo: FC<LogoProps> = ({ sx }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleRedirect = () => {
+    dispatch(clearShapes());
+    navigate('/');
+  };
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Roboto' }}>
-      <Link to="/">
+      <Link onClick={handleRedirect}>
         <img src={logo} style={sx} alt="Logo" />
       </Link>
     </div>

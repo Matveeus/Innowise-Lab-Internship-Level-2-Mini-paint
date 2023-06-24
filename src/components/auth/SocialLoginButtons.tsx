@@ -1,9 +1,9 @@
 import React from 'react';
-import { Button, Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import { auth, googleAuthProvider, facebookAuthProvider } from '../../services/firebase';
-import { GoogleAuthProvider, FacebookAuthProvider, Auth } from 'firebase/auth';
+import { auth, facebookAuthProvider, googleAuthProvider } from '../../services/firebase';
+import { Auth, FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 
 interface SocialLoginButtonsProps {
   handleSocialSignIn: (auth: Auth, authProvider: GoogleAuthProvider | FacebookAuthProvider) => void;

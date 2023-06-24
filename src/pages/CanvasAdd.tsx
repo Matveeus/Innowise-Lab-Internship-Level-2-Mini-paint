@@ -2,13 +2,13 @@ import React from 'react';
 import PaintApp from '../components/canvas/PaintApp';
 import Header from '../components/header/Header';
 
-function Paint() {
+function CanvasAdd() {
   return (
     <>
       <Header />
-      <PaintApp />
+      <PaintApp action="add" />
     </>
   );
 }
 
-export default Paint;
+export default CanvasAdd;

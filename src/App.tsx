@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { ThemeProvider, CssBaseline } from '@mui/material';
-import { lightTheme, darkTheme } from './theme';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { darkTheme, lightTheme } from './theme';
 import './assets/styles/App.css';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
-import Paint from './pages/Paint';
+import CanvasAdd from './pages/CanvasAdd';
+import CanvasEdit from './pages/CanvasEdit';
 import SwitchTheme from './components/SwitchTheme';
 
 function App() {
@@ -23,7 +24,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/paint" element={<Paint />} />
+        <Route path="/create-art" element={<CanvasAdd />} />
+        <Route path="/:canvasID/edit" element={<CanvasEdit />} />
       </Routes>
       <SwitchTheme toggleTheme={toggleTheme} />
     </ThemeProvider>

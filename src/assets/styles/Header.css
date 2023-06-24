@@ -1,0 +1,24 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    align-items: center;
+    padding: 10px 30px;
+    top: 0;
+    width: 100%;
+    z-index: 5;
+}
+
+.drawer {
+    width: 250px;
+    height: 100%;
+    padding: 10px;
+}
+
+.drawer-buttons {
+    width: 92%;
+    display: flex;
+    justifyContent: space-between;
+    position: absolute;
+    bottom: 10px;
+}
