@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Grid } from '@mui/material';
 import ArtCard from './ArtCard';
 import NoArts from './NoArts';
@@ -20,6 +21,7 @@ const Gallery = () => {
       };
     }>
   >([]);
+  const searchTerm = useSelector((state: { search: string }) => state.search);
 
   useEffect(() => {
     const tasksRef = ref(db);
@@ -56,15 +58,20 @@ const Gallery = () => {
     return <Loader />;
   }
 
+  // Фильтруем изображения на основе поискового запроса
+  const filteredImagesData = imagesData.filter(data =>
+    data.canvas.username.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
   return (
     <Grid
       container
       spacing={2}
-      justifyContent={imagesData.length === 0 ? 'center' : 'flex-start'}
+      justifyContent={filteredImagesData.length === 0 ? 'center' : 'flex-start'}
       sx={{ mt: '50px', padding: '0 30px' }}
     >
-      {imagesData.length > 0 ? (
-        imagesData.map((data, index) => (
+      {filteredImagesData.length > 0 ? (
+        filteredImagesData.map((data, index) => (
           <Grid key={index} item xs={5} md={3} sx={{ mb: '50px' }}>
             <ArtCard imageData={data} />
           </Grid>

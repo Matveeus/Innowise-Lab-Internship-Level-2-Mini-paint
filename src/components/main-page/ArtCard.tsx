@@ -5,6 +5,7 @@ import { ref, remove } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
 import { addShapes, Shape } from '../../redux/store/canvasSlice';
 import { useDispatch } from 'react-redux';
+import ArtModal from './ArtModal';
 
 interface ArtCardProps {
   imageData: {
@@ -19,6 +20,7 @@ interface ArtCardProps {
 }
 
 const ArtCard: React.FC<ArtCardProps> = ({ imageData }) => {
+  const [open, setOpen] = React.useState(false);
   const { canvasURL, title, username, shapes, canvasID } = imageData.canvas;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,8 +31,7 @@ const ArtCard: React.FC<ArtCardProps> = ({ imageData }) => {
   };
 
   const handleArtOpen = () => {
-    navigate(`/${canvasID}/edit`);
-    dispatch(addShapes(shapes));
+    setOpen(true);
   };
 
   const handleArtDelete = () => {
@@ -49,6 +50,7 @@ const ArtCard: React.FC<ArtCardProps> = ({ imageData }) => {
         </Typography>
       </CardContent>
       <CardActions sx={{ justifyContent: 'center' }}>
+        <ArtModal open={open} setOpen={setOpen} image={canvasURL} title={title} />
         {auth.currentUser?.displayName === username ? (
           <>
             <Button size="small" onClick={handleArtEdit}>
@@ -62,7 +64,9 @@ const ArtCard: React.FC<ArtCardProps> = ({ imageData }) => {
             </Button>
           </>
         ) : (
-          <Button size="small">Open</Button>
+          <Button size="small" onClick={handleArtOpen}>
+            Open
+          </Button>
         )}
       </CardActions>
     </Card>
