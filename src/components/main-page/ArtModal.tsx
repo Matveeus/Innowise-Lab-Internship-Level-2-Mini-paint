@@ -16,8 +16,6 @@ const ArtModal = ({
     setOpen(false);
   };
 
-  console.log(image);
-
   return (
     <Dialog
       open={open}

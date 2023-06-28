@@ -34,18 +34,20 @@ const AddArt: React.FC<SaveCanvasProps> = ({ canvasRef, setSaveStatus }) => {
   const handleCanvasSave: SubmitHandler<FieldValues> = async () => {
     setSaveStatus(true);
     const canvasURL = canvasRef.current?.toDataURL();
-    const currentDate = new Date();
+    const createdOn = new Date().toISOString();
     const username = auth.currentUser?.displayName;
     const canvasID = uid();
 
     const canvasData = {
       title,
-      createdOn: currentDate,
+      createdOn,
       username,
       canvasURL,
       shapes,
       canvasID,
     };
+
+    console.log(canvasData.createdOn);
 
     try {
       await set(ref(db, `${canvasData.canvasID}`), {

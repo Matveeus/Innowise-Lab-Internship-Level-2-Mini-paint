@@ -18,6 +18,7 @@ const Gallery = () => {
         username: string;
         shapes: Shape[];
         canvasID: string;
+        createdOn: string;
       };
     }>
   >([]);
@@ -40,8 +41,12 @@ const Gallery = () => {
                 username: string;
                 shapes: Shape[];
                 canvasID: string;
+                createdOn: string;
               };
             }>;
+            console.log(dataArray);
+            dataArray.sort((a, b) => new Date(b.canvas.createdOn).getTime() - new Date(a.canvas.createdOn).getTime());
+            console.log(dataArray);
             setImagesData(dataArray);
           }
           setIsLoading(false);
@@ -58,7 +63,6 @@ const Gallery = () => {
     return <Loader />;
   }
 
-  // Фильтруем изображения на основе поискового запроса
   const filteredImagesData = imagesData.filter(data =>
     data.canvas.username.toLowerCase().includes(searchTerm.toLowerCase()),
   );
