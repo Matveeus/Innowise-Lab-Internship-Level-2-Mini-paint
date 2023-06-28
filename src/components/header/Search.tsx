@@ -1,7 +1,9 @@
 import React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import { setSearchTerm } from '../../redux/store/searchSlice';
+import { useDispatch } from 'react-redux';
 
 export default function Search() {
   const Search = styled('div')(({ theme }) => ({
@@ -53,12 +55,23 @@ export default function Search() {
     },
   }));
 
+  const dispatch = useDispatch();
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setSearchTerm(e.target.value));
+  };
+
   return (
     <Search>
       <SearchIconWrapper>
         <SearchIcon sx={{ color: '#000000' }} />
       </SearchIconWrapper>
-      <StyledInputBase sx={{ color: '#000000' }} placeholder="Search author…" inputProps={{ 'aria-label': 'search' }} />
+      <StyledInputBase
+        sx={{ color: '#000000' }}
+        placeholder="Search author…"
+        inputProps={{ 'aria-label': 'search' }}
+        onChange={handleSearchChange}
+      />
     </Search>
   );
 }

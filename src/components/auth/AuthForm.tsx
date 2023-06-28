@@ -2,8 +2,7 @@ import React, { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { Alert, Box, Button, Container, TextField, Typography } from '@mui/material';
 import Logo from '../Logo';
-import { signInWithPopup } from 'firebase/auth';
-import { GoogleAuthProvider, FacebookAuthProvider, Auth } from 'firebase/auth';
+import { Auth, FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import useAuthState from '../../hooks/useAuthState';
 import firebaseErrors from '../../services/firebaseErrors';
 import SocialLoginButtons from './SocialLoginButtons';
@@ -73,7 +72,7 @@ export default function AuthForm({
       })}
       name="password"
       error={errors?.password && true}
-      helperText={errors?.password && ((errors?.password.message as string) || 'Wrong password')}
+      helperText={errors?.password && (errors?.password.message as string)}
       margin="normal"
       fullWidth
       label="Password"
@@ -89,7 +88,7 @@ export default function AuthForm({
       {...register('name', { required: 'Name is required' })}
       name="name"
       error={errors?.name && true}
-      helperText={errors?.name && ((errors?.name.message as string) || 'Name is required')}
+      helperText={errors?.name && (errors?.name.message as string)}
       margin="normal"
       fullWidth
       id="name"
@@ -108,10 +107,7 @@ export default function AuthForm({
       })}
       name="passwordConfirm"
       error={errors?.passwordConfirm && true}
-      helperText={
-        errors?.passwordConfirm &&
-        ((errors?.passwordConfirm.message as string) || 'Password and password confirmation do not match')
-      }
+      helperText={errors?.passwordConfirm && (errors?.passwordConfirm.message as string)}
       margin="normal"
       fullWidth
       label="Repeat password"
@@ -153,7 +149,7 @@ export default function AuthForm({
           {...register('email', { required: 'Email is required', pattern: /^\S+@\S+$/i })}
           name="email"
           error={errors?.email && true}
-          helperText={errors?.email && ((errors?.email.message as string) || 'Enter a valid email')}
+          helperText={errors?.email && (errors?.email.message as string)}
           margin="normal"
           fullWidth
           id="email"

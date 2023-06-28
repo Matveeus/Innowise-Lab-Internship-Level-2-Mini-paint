@@ -28,7 +28,7 @@ export default function LoginForm() {
     }
   };
 
-  if (isLoading === true) {
+  if (isLoading) {
     return <Loader />;
   }
 

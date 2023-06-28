@@ -1,10 +1,11 @@
 import React from 'react';
-import { Box, useMediaQuery, IconButton, Drawer } from '@mui/material';
+import { Box, Drawer, IconButton, useMediaQuery } from '@mui/material';
 import Search from './Search';
 import LogOutButton from './LogOutButton';
 import Logo from '../Logo';
 import AddArtwork from './AddArtwork';
 import MenuIcon from '@mui/icons-material/Menu';
+import '../../assets/styles/Header.css';
 
 export default function Header() {
   const isScreenWidthLessThan800px = useMediaQuery('(max-width: 800px)');
@@ -17,15 +18,9 @@ export default function Header() {
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        position: 'fixed',
-        alignItems: 'center',
         backgroundColor: 'primary.main',
-        padding: '10px 30px',
-        top: 0,
-        width: '100%',
       }}
+      className="header"
     >
       <Logo
         sx={{
@@ -50,17 +45,9 @@ export default function Header() {
         </>
       )}
       <Drawer anchor="right" open={isDrawerOpen} onClose={toggleDrawer}>
-        <Box sx={{ width: 250, height: '100%', padding: '10px', backgroundColor: 'primary.main' }}>
+        <Box sx={{ backgroundColor: 'primary.main' }} className="drawer">
           <Search />
-          <Box
-            sx={{
-              width: '92%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              position: 'absolute',
-              bottom: '10px',
-            }}
-          >
+          <Box className="drawer-buttons">
             <AddArtwork />
             <LogOutButton />
           </Box>
