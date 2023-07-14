@@ -44,9 +44,7 @@ const Gallery = () => {
                 createdOn: string;
               };
             }>;
-            console.log(dataArray);
             dataArray.sort((a, b) => new Date(b.canvas.createdOn).getTime() - new Date(a.canvas.createdOn).getTime());
-            console.log(dataArray);
             setImagesData(dataArray);
           }
           setIsLoading(false);

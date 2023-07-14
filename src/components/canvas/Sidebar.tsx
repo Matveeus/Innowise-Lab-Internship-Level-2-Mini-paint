@@ -43,55 +43,30 @@ const Sidebar: React.FC = () => {
     dispatch(undo());
   };
 
+  const buttons = [
+    { tool: 'brush', icon: <BrushOutlined /> },
+    { tool: 'square', icon: <CropSquareOutlined /> },
+    { tool: 'circle', icon: <CircleOutlined /> },
+    { tool: 'line', icon: <EastOutlined /> },
+    { tool: 'star', icon: <StarBorderOutlined /> },
+  ];
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', height: '50px' }}>
       <ButtonGroup variant="outlined" aria-label="outlined button group" sx={{ width: '30%', height: '100%' }}>
-        <Button
-          onClick={() => handleToolChange('brush')}
-          className={currentTool === 'brush' ? 'active' : ''}
-          sx={{
-            backgroundColor: activeButton === 'brush' ? 'active' : '',
-            width: '100%',
-          }}
-        >
-          <BrushOutlined />
-        </Button>
-        <Button
-          onClick={() => handleToolChange('square')}
-          sx={{
-            backgroundColor: activeButton === 'square' ? 'active' : '',
-            width: '100%',
-          }}
-        >
-          <CropSquareOutlined />
-        </Button>
-        <Button
-          onClick={() => handleToolChange('circle')}
-          sx={{
-            backgroundColor: activeButton === 'circle' ? 'active' : '',
-            width: '100%',
-          }}
-        >
-          <CircleOutlined />
-        </Button>
-        <Button
-          onClick={() => handleToolChange('line')}
-          sx={{
-            backgroundColor: activeButton === 'line' ? 'active' : '',
-            width: '100%',
-          }}
-        >
-          <EastOutlined />
-        </Button>
-        <Button
-          onClick={() => handleToolChange('star')}
-          sx={{
-            backgroundColor: activeButton === 'star' ? 'active' : '',
-            width: '100%',
-          }}
-        >
-          <StarBorderOutlined />
-        </Button>
+        {buttons.map(button => (
+          <Button
+            key={button.tool}
+            onClick={() => handleToolChange(button.tool)}
+            className={currentTool === button.tool ? 'active' : ''}
+            sx={{
+              backgroundColor: activeButton === button.tool ? 'active' : '',
+              width: '100%',
+            }}
+          >
+            {button.icon}
+          </Button>
+        ))}
         <Button
           color="success"
           onClick={handleUndo}
